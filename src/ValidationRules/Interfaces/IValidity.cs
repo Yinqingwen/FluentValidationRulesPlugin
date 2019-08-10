@@ -1,11 +1,12 @@
-﻿
+﻿using System.Collections.Generic;
 
-namespace Plugin.ValidationRules.Interfaces
+namespace Plugin.FluentValidationRules.Interfaces
 {
     public interface IValidity
     {
+        string ClassPropertyName { get; set; }
         bool IsValid { get; set; }
-
-        bool Validate();
+        List<string> Errors { get; set; }
+        void Clear();
     }
 }
