@@ -35,7 +35,7 @@ Probably the easiest way to get a feel for what this library is trying to help w
 
 
 #### 1) Add the NuGet to your project
-* [Plugin.FluentValidationRules](https://www.nuget.org/packages/Plugin.ValidationRules/) [![NuGet](https://img.shields.io/nuget/v/Plugin.FluentValidationRules.svg?label=NuGet)](https://www.nuget.org/packages/Plugin.FluentValidationRules/)
+* [Plugin.FluentValidationRules](https://www.nuget.org/packages/Plugin.FluentValidationRules/) [![NuGet](https://img.shields.io/nuget/v/Plugin.FluentValidationRules.svg?label=NuGet)](https://www.nuget.org/packages/Plugin.FluentValidationRules/)
 * Build status: ![Build status](https://img.shields.io/badge/build-succeded-brightgreen.svg)
 
 ##### Platform Support
@@ -123,7 +123,7 @@ First, the setup method, which you should call from your ViewModel's constructor
         _emailValidator = new EmailValidator();
         _emailValidatables = new Validatables(RecipientName, EmailAddress);
 
-        // mayebe even set some defaults
+        // maybe even set some defaults
         RecipientName.Value = "Fred Fredovich";
     }
 ```
