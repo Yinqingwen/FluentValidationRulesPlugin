@@ -14,10 +14,11 @@ Taking that approach but using FluentValidation with it saves a lot of time/code
 - and of course the fluent syntax reads well and let's you easily chain rules :)
 
 Basically, you are given a few objects and extensions to play with:
-| Thing        | That      |
+
+|Thing|That|
 | -------------: | :------------- |
 | **Validatable\<T\>**      | let's you create properties in your ViewModel to bind to that hold the **Value** of Type T from the View and the **IsValid** result and corresponding **Errors** from the Validation. Also let's you **Clear()** either just the validation results or both those and the Values themselves. |
-| **Validatables**     | let you group numerous Validatable object properties for operating on them all at once for convenience, including an extension **Populate\<T\>** to instantiate and populate a class of type T with the Validatabless Values for each property. |
+| **Validatables**     | let you group numerous Validatable object properties for operating on them all at once for convenience, including an extension **Populate\<T\>** to instantiate and populate a class of type T with the Validatables' Values for each property. |
 | **ApplyResultsTo** | is an extension method on FluentValidation's ValidationResult class that takes in either a single Validatable object or a group of Validatables and then populates their individual results, i.e. their IsValid status and Errors if any, as well as returns a summarized **OverallValidationResult** that contains all errors, an overall validity flag, and any errors that were not captured by the Validatables passed in that were still reported by your Validator.     |
 | **GetRulesFor** | is an extension method on FluentValidation's AbstractValidator class that takes in either a single Validatable object or a group of Validatables and returns their corresponding **IValidationRules**.    |
 | **IValidate\<T\>** | is an interface you may like to throw onto your ViewModel to remind you to **SetupForValidation()** and have a **Validate(T model)** method to actually do the damn thang on a class of type T, as well as **ClearValidation()** results or the underlying values too. |
@@ -135,8 +136,8 @@ Next, the method that will actually do the validation, given an instance of the 
         return _emailValidator.Validate(email).ApplyResultsTo(_emailValidatables);
     }
 ```
-:bulb: The ApplyResultsTo extension will populate the IsValid and Errors list of each Validatable, as well as return an OverallValidationResult (which you may also bind to in your view if you wish) that summarizes results from the validation as a whole plus any that may not have been captured by the properties you mapped.
-:bulb: Here, you may use the GetRulesFor extension method on your AbstractValidator passing in your Validatables to get the rules that only pertain to them, and then execute just those. This is not necessary in this example, but may be in a more complex situation.
+:bulb: The ApplyResultsTo extension will populate the IsValid and Errors list of each Validatable, as well as return an OverallValidationResult (which you may also bind to in your view if you wish) that summarizes results from the validation as a whole plus any that may not have been captured by the properties you mapped.  
+:bulb: Here, you may use the GetRulesFor extension method on your AbstractValidator passing in your Validatables to get the rules that only pertain to them, and then execute just those. This is not necessary in this example, but may be in a more complex situation.  
 :bulb: You may also of course use all that the FluentValidation library has to offer, e.g. setting [RootContextData](https://fluentvalidation.net/start#root-context-data) for use with custom rules that you may have defined on your AbstractValidator.
 
 Finally, you must provide a method that clear's the validation results (and if desirable, the current value stored):
@@ -191,7 +192,7 @@ Note, this example is using the [Prism Library's](https://github.com/PrismLibrar
 #### 6) Update your View
 
 This example uses Xamarin Forms XAML, and shows how we would bind to our EmailAddress Validatable in this ongoing example:
-```csharp
+```xaml
     <Entry
         Placeholder="Email"
         Text="{Binding EmailAddress.Value}">
@@ -211,11 +212,13 @@ This example uses Xamarin Forms XAML, and shows how we would bind to our EmailAd
         Command="{Binding ValidateEmailCommand}"
         Text="Validate" />
 ```
-:bulb: This is probably the most common use case - we have
+ 
+:bulb: This is probably the most common use case - we have:
 1. an entry to take in our uer's input (only showing 1 instead of both for each property for brevity)
 2. a button that will perform the validation
 3. a label showing the first of potential many errors under the entry, or none of course if validation succeeded
 4. a behavior for clearing the validation error label once the user activates the entry again (presumably to fix the error)
+    - :warning: The CommandParameter is specifying the property name on the CLASS for clearing, not the Validatable object's property name "EmailAddress". That is why it is usually best to just name them the same way, but did not so do in this example. 
 
 But you could also a button to clear all the validation at once, or even along with the actual values (clear the whole form), etc.
 
