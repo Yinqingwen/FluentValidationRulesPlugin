@@ -225,4 +225,4 @@ But you could also a button to clear all the validation at once, or even along w
 #### And that's it! For a more complete example, refer to the [sample project](https://github.com/mzhukovs/FluentValidationRulesPlugin/tree/master/example/XamFluentValidationExample) in the example folder in this repo. Thank you and hope this is helpful!
 
 ## License :page_with_curl:
-The MIT License (MIT) see [License](LICENSE) file.
+The MIT License (MIT) see [License](LICENSE.md) file.
