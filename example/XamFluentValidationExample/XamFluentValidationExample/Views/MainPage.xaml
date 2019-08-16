@@ -1,11 +1,334 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="XamFluentValidationExample.Views.MainPage"
-             Title="{Binding Title}">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage
+    x:Class="XamFluentValidationExample.Views.MainPage"
+    Title="{Binding Title}"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:behaviors="http://prismlibrary.com"
+    xmlns:viewModels="clr-namespace:XamFluentValidationExample.ViewModels;assembly=XamFluentValidationExample"
+    Visual="Material"
+    d:DataContext="{d:DesignInstance viewModels:MainPageViewModel}"
+    mc:Ignorable="d">
 
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Label Text="Welcome to Xamarin Forms and Prism!" />
-    </StackLayout>
+    <ContentPage.Resources>
+        <ResourceDictionary>
 
+            <Style
+                x:Key="HeaderLabelStyle"
+                TargetType="{x:Type Label}">
+                <Setter
+                    Property="TextColor"
+                    Value="Black" />
+                <Setter
+                    Property="FontSize"
+                    Value="Large" />
+            </Style>
+
+            <Style TargetType="{x:Type Entry}">
+                <Setter
+                    Property="Opacity"
+                    Value="0.9" />
+                <Setter
+                    Property="BackgroundColor"
+                    Value="White" />
+                <Style.Triggers>
+                    <Trigger
+                        Property="IsFocused"
+                        TargetType="Entry"
+                        Value="True">
+                        <Setter
+                            Property="Opacity"
+                            Value="1" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style
+                x:Key="ErrorLabelStyle"
+                TargetType="{x:Type Label}">
+                <Setter
+                    Property="TextColor"
+                    Value="{StaticResource ErrorColor}" />
+                <Setter
+                    Property="Margin"
+                    Value="0,-5,0,0" />
+            </Style>
+
+            <Style
+                x:Key="FrameStyle"
+                TargetType="{x:Type Frame}">
+                <Setter
+                    Property="BorderColor"
+                    Value="Black" />
+                <Setter
+                    Property="BackgroundColor"
+                    Value=" #80FFA500" />
+                <Setter
+                    Property="CornerRadius"
+                    Value="25" />
+                <Setter
+                    Property="HasShadow"
+                    Value="True" />
+            </Style>
+
+            <Style
+                x:Key="CheckmarkStyle"
+                TargetType="{x:Type Label}">
+                <Setter
+                    Property="TextColor"
+                    Value="Green" />
+                <Setter
+                    Property="FontSize"
+                    Value="Large" />
+                <Setter
+                    Property="FontAttributes"
+                    Value="Bold" />
+            </Style>
+
+            <Style
+                x:Key="XStyle"
+                TargetType="{x:Type Label}">
+                <Setter
+                    Property="TextColor"
+                    Value="Red" />
+                <Setter
+                    Property="FontSize"
+                    Value="Large" />
+                <Setter
+                    Property="FontAttributes"
+                    Value="Bold" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand">
+
+        <AbsoluteLayout
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <Image
+                AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                AbsoluteLayout.LayoutFlags="All"
+                Aspect="AspectFill"
+                Source="bg_beer.png" />
+        </AbsoluteLayout>
+
+        <ScrollView>
+        <Grid
+            Margin="{OnPlatform iOS='20', Android='20', UWP='50,20,50,100' }"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{OnPlatform iOS=12*, Android=10*, UWP=4* }"/>
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="0"
+                FontSize="40"
+                Text="{Binding Title}" />
+
+            <StackLayout
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="1"
+                Orientation="Vertical">
+                <Button
+                    Command="{Binding ClearValidationCommand}"
+                    Text="Clear All Validation" />
+                <Button
+                    Command="{Binding ClearEverythingCommand}"
+                    Text="Clear ALL Validation and ALL Values" />
+            </StackLayout>
+
+            <StackLayout
+                x:Name="BeerInputLayout"
+                Grid.Column="0"
+                Grid.Row="2"
+                Margin="0,20,0,0">
+                <Label
+                    Style="{StaticResource HeaderLabelStyle}"
+                    Text="Beer"
+                    FontSize="25"/>
+                <Frame Style="{StaticResource FrameStyle}">
+                    <StackLayout
+                        Margin="10"
+                        VerticalOptions="FillAndExpand">
+
+                        <!-- Note ReturnType Next will automatically implement attempting to move to next focusable view: b/c we are using Xamarin v4.2, see https://github.com/xamarin/Xamarin.Forms/pull/6706 -->
+                        <Entry
+                            Placeholder="Name"
+                            ReturnType="Next"
+                            Text="{Binding BeerName.Value}">
+                            <Entry.Behaviors>
+                                <behaviors:EventToCommandBehavior
+                                    Command="{Binding ClearValidationCommand}"
+                                    CommandParameter="Name"
+                                    EventName="Focused" />
+                            </Entry.Behaviors>
+                        </Entry>
+                        <Label
+                            Style="{StaticResource ErrorLabelStyle}"
+                            Text="{Binding BeerName.FirstError}" />
+
+                        <Entry
+                            Placeholder="Rating (optional)"
+                            ReturnType="Next"
+                            Keyboard="Numeric"
+                            Text="{Binding BeerRating.Value}">
+                            <!-- this shows probably the most common use-case - just clear validation only on one property (the one that the user just went to edit, presumably to fix) -->
+                            <Entry.Behaviors>
+                                <behaviors:EventToCommandBehavior
+                                    Command="{Binding ClearValidationCommand}"
+                                    CommandParameter="Rating"
+                                    EventName="Focused" />
+                            </Entry.Behaviors>
+                        </Entry>
+                        <Label
+                            Style="{StaticResource ErrorLabelStyle}"
+                            Text="{Binding BeerRating.FirstError}" />
+
+                        <StackLayout
+                            HorizontalOptions="FillAndExpand"
+                            Orientation="Horizontal">
+                            <Entry
+                                HorizontalOptions="FillAndExpand"
+                                Placeholder="Bad Beer 1"
+                                ReturnType="Next"
+                                Text="{Binding BadBeer1}" />
+                            <Entry
+                                HorizontalOptions="FillAndExpand"
+                                Placeholder="Bad Beer 2"
+                                ReturnType="Next"
+                                Text="{Binding BadBeer2}" />
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal">
+                            <Button
+                                Command="{Binding ValidateBeerCommand}"
+                                BackgroundColor="ForestGreen"
+                                Text="Validate"
+                                VerticalOptions="EndAndExpand" />
+                            <Button
+                                Command="{Binding ClearValidationCommand}"
+                                CommandParameter="Name, Rating"
+                                Text="Clear Validation"
+                                VerticalOptions="EndAndExpand" />
+                        </StackLayout>
+                        <!-- here we pass in false (capitalization doesn't matter) to also clear the values, then the pipe separator followed by the property names (note spacing does not matter) -->
+                        <Button
+                            Command="{Binding ClearValidationCommand}"
+                            CommandParameter="False | Name, Rating"
+                            Text="Clear Validation and [Validatable] Values"
+                            VerticalOptions="EndAndExpand" />
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+
+            <StackLayout
+                x:Name="BeerTallyLayout"
+                Grid.Column="1"
+                Grid.Row="2"
+                VerticalOptions="End">
+                <Label Style="{StaticResource CheckmarkStyle}" Text="{Binding BeerWins, StringFormat='&#x2714; {0}'}" />
+                <Label Style="{StaticResource XStyle}" Text="{Binding BeerFails, StringFormat='&#x274c; {0}'}" />
+            </StackLayout>
+
+            <StackLayout
+                x:Name="EmailInputLayout"
+                Grid.Column="0"
+                Grid.Row="3"
+                Margin="0,10,0,50">
+                <Label
+                    Style="{StaticResource HeaderLabelStyle}"
+                    Text="Email" 
+                    FontSize="25"/>
+                <Frame Style="{StaticResource FrameStyle}">
+                    <StackLayout
+                        Margin="10"
+                        VerticalOptions="FillAndExpand">
+
+                        <Entry
+                            Placeholder="Name"
+                            ReturnType="Next"
+                            Text="{Binding RecipientName.Value}">
+                            <Entry.Behaviors>
+                                <behaviors:EventToCommandBehavior
+                                    Command="{Binding ClearValidationCommand}"
+                                    CommandParameter="RecipientName"
+                                    EventName="Focused" />
+                            </Entry.Behaviors>
+                        </Entry>
+                        <Label
+                            HorizontalOptions="End"
+                            Style="{StaticResource ErrorLabelStyle}"
+                            Text="{Binding RecipientName.FirstError}" />
+
+                        <Entry
+                            Placeholder="Email"
+                            ReturnType="Done"
+                            Text="{Binding RecipientEmailAddress.Value}">
+                            <Entry.Behaviors>
+                                <behaviors:EventToCommandBehavior
+                                    Command="{Binding ClearValidationCommand}"
+                                    CommandParameter="RecipientEmailAddress"
+                                    EventName="Focused" />
+                            </Entry.Behaviors>
+                        </Entry>
+                        <Label
+                            HorizontalOptions="End"
+                            Style="{StaticResource ErrorLabelStyle}"
+                            Text="{Binding RecipientEmailAddress.FirstError}" />
+
+                        <StackLayout Orientation="Horizontal">
+
+                            <Button
+                                Command="{Binding ValidateEmailCommand}"
+                                Text="Validate"
+                                BackgroundColor="ForestGreen"
+                                VerticalOptions="EndAndExpand" />
+                            <Button
+                                Command="{Binding ClearValidationForGroupCommand}"
+                                CommandParameter="EmailGroup"
+                                Text="Clear Validation"
+                                VerticalOptions="EndAndExpand" />
+                        </StackLayout>
+                        <Button
+                            Command="{Binding ClearValidationCommand}"
+                            CommandParameter=" false | RecipientName, RecipientEmailAddress "
+                            Text="Clear Validation and Values"
+                            VerticalOptions="EndAndExpand" />
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+
+            <StackLayout
+                x:Name="EmailTallyLayout"
+                Grid.Column="1"
+                Grid.Row="3"
+                VerticalOptions="End"
+                Margin="0,0,0,50">
+                <Label Style="{StaticResource CheckmarkStyle}" Text="{Binding EmailWins, StringFormat='&#x2714; {0}'}" />
+                <Label Style="{StaticResource XStyle}" Text="{Binding EmailFails, StringFormat='&#x274c; {0}'}" />
+            </StackLayout>
+
+
+        </Grid>
+        </ScrollView>
+    </Grid>
 </ContentPage>

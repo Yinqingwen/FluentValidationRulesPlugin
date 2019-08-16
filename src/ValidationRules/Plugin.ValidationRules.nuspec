@@ -3,7 +3,7 @@
   <metadata>
 
     <!-- Product -->
-    <version>1.0.0.0</version>
+    <version>1.0.5.0</version>
     <copyright>Copyright 2019</copyright>
     
     <!-- Package -->
@@ -11,10 +11,11 @@
     <title>Validation Rules Plugin for Xamarin and Windows</title>
     <!--<licenseUrl>https://github.com/mzhukovs/FluentValidationRulesPlugin/blob/master/LICENSE.md</licenseUrl>-->
     <projectUrl>https://github.com/mzhukovs/FluentValidationRulesPlugin</projectUrl>
-    <iconUrl>https://github.com/mzhukovs/FluentValidationRulesPlugin/tree/master/img/icon.png?raw=true</iconUrl>
+    <!--<icon>icon.png</icon>--> <!--https://github.com/NuGet/Home/issues/352-->
+    <iconUrl>https://github.com/mzhukovs/FluentValidationRulesPlugin/blob/master/img/icon.png?raw=true</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <summary>Add Validatable Objects that leverage FluentValidation to your ViewModels for easy binding and validation in a .NET MVVM app!</summary>
+    <summary>Add Validatable objects that leverage FluentValidation to your ViewModels for easy binding and validation in a .NET MVVM app!</summary>
     <tags>fluent validation validate valid validation rules validation-rules xam xamarin plugin forms mvvm xamarin.forms ios uwp android windows</tags>
     
     <!-- Author -->

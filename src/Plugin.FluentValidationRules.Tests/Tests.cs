@@ -1,7 +1,7 @@
+using System;
 using System.Linq;
 using FluentValidation;
 using NUnit.Framework;
-using Plugin.FluentValidationRules.Extensions;
 
 namespace Plugin.FluentValidationRules.Tests
 {
@@ -95,21 +95,32 @@ namespace Plugin.FluentValidationRules.Tests
             Assert.IsEmpty(ValidatableProps.Errors);
             Assert.IsEmpty(ValidatableProps.FirstError);
 
+            Assert.AreEqual("LOL_I_AM_NOT_AN_EMAIL!", FromEmail.Value);
             Assert.IsTrue(FromEmail.IsValid);
             Assert.IsEmpty(FromEmail.Errors);
             Assert.IsEmpty(FromEmail.FirstError);
 
+            Assert.AreEqual("X", ToName.Value);
             Assert.IsTrue(ToName.IsValid);
             Assert.IsEmpty(ToName.Errors);
             Assert.IsEmpty(ToName.FirstError);
 
+            Assert.AreEqual("NOPE", MessageHtml.Value);
             Assert.IsTrue(MessageHtml.IsValid);
             Assert.IsEmpty(MessageHtml.Errors);
             Assert.IsEmpty(MessageHtml.FirstError);
 
+            Assert.AreEqual(5, Rating.Value);
             Assert.IsTrue(Rating.IsValid);
             Assert.IsEmpty(Rating.Errors);
             Assert.IsEmpty(Rating.FirstError);
+
+            ValidatableProps.Clear(onlyValidation: false);
+
+            Assert.IsEmpty(FromEmail.Value);
+            Assert.IsEmpty(ToName.Value);
+            Assert.IsEmpty(MessageHtml.Value);
+            Assert.IsNull(Rating.Value);
         }
 
         [Test]
@@ -169,7 +180,7 @@ namespace Plugin.FluentValidationRules.Tests
                 ToName = ToName.Value
             };
 
-            var result = Validator.Validate(testClassInstance).ApplyResultsTo(ToName);
+            _ = Validator.Validate(testClassInstance).ApplyResultsTo(ToName);
 
             Assert.IsFalse(ToName.IsValid);
             Assert.AreEqual(2, ToName.Errors.Count);
@@ -196,6 +207,14 @@ namespace Plugin.FluentValidationRules.Tests
 
             ToName.Clear();
 
+            Assert.AreEqual("XX", ToName.Value);
+            Assert.IsTrue(ToName.IsValid);
+            Assert.IsEmpty(ToName.Errors);
+            Assert.IsEmpty(ToName.FirstError);
+
+            ToName.Clear(onlyValidation: false);
+            Assert.IsEmpty(ToName.Value);
+
             Assert.IsTrue(ToName.IsValid);
             Assert.IsEmpty(ToName.Errors);
             Assert.IsEmpty(ToName.FirstError);
@@ -210,7 +229,6 @@ namespace Plugin.FluentValidationRules.Tests
             Assert.IsEmpty(result.FirstOfNonSplitErrors);
         }
 
-        
         [Test]
         public void Clear_SinglePropViaGroupLeavingOneBad_ErrorsUpdated()
         {
@@ -224,7 +242,7 @@ namespace Plugin.FluentValidationRules.Tests
                 Rating = Rating.Value
             };
 
-            Validator.Validate(testClassInstance).ApplyResultsTo(ValidatableProps);
+            _ = Validator.Validate(testClassInstance).ApplyResultsTo(ValidatableProps);
 
             Assert.IsFalse(ValidatableProps.AreValid);
             Assert.AreEqual(5, ValidatableProps.Errors.Count);
@@ -232,8 +250,9 @@ namespace Plugin.FluentValidationRules.Tests
             Assert.IsFalse(Rating.IsValid);
             Assert.AreEqual(1, Rating.Errors.Count);
 
-            ValidatableProps.Clear(nameof(TestClass.ToName));
+            ValidatableProps.Clear(forClassPropertyNames: nameof(TestClass.ToName));
 
+            Assert.AreEqual("XX", ToName.Value);
             Assert.IsTrue(ToName.IsValid);
             Assert.IsEmpty(ToName.Errors);
             Assert.IsEmpty(ToName.FirstError);
@@ -244,6 +263,11 @@ namespace Plugin.FluentValidationRules.Tests
 
             Assert.IsFalse(ValidatableProps.AreValid);
             Assert.AreEqual(3, ValidatableProps.Errors.Count); // count drops to 3 failed errors only
+
+            ValidatableProps.Clear(onlyValidation: false);
+
+            Assert.IsEmpty(ToName.Value);
+            Assert.IsNull(Rating.Value);
         }
 
         [Test]
@@ -258,6 +282,84 @@ namespace Plugin.FluentValidationRules.Tests
         {
             var rules = Validator.GetRulesFor(ValidatableProps);
             Assert.AreEqual(5 , rules.Count);
+        }
+
+        [Test]
+        public void ParseClearOptions_WithPipeAndSingleProp_CorrectlyParses()
+        {
+            var clearOptions = "true | propName";
+            var (trueOrFalse, propNames) = clearOptions.ParseClearOptions();
+            Assert.IsTrue(trueOrFalse);
+            Assert.AreEqual(1, propNames.Length);
+            Assert.AreEqual("propName", propNames.First());
+        }
+
+        [Test]
+        public void ParseClearOptions_WithPipeAndMultipleProp_CorrectlyParses()
+        {
+            var clearOptions = " false |propName1, propName2 ,propName3 ";
+            var (trueOrFalse, propNames) = clearOptions.ParseClearOptions();
+            Assert.False(trueOrFalse);
+            Assert.AreEqual(3, propNames.Length);
+            Assert.AreEqual(new [] {"propName1", "propName2", "propName3"}, propNames);
+        }
+
+        [Test]
+        public void ParseClearOptions_WithOnlyBool_CorrectlyParses()
+        {
+            var clearOptions = " True  ";
+            var (trueOrFalse, _) = clearOptions.ParseClearOptions();
+            Assert.True(trueOrFalse);
+        }
+
+        [Test]
+        public void ParseClearOptions_WithOnlyPropNames_CorrectlyParses()
+        {
+            var clearOptions = "  propName1,   propName2 ,propName3  ";
+            var (_, propNames) = clearOptions.ParseClearOptions();
+            Assert.AreEqual(new [] {"propName1", "propName2", "propName3"}, propNames);
+        }
+
+        [Test]
+        public void ParseClearOptions_WithBadString_Throws()
+        {
+            var clearOptions = "true|";
+            Assert.Throws<ArgumentException>(() => clearOptions.ParseClearOptions());
+
+            clearOptions = "|param1";
+            Assert.Throws<ArgumentException>(() => clearOptions.ParseClearOptions());
+
+            clearOptions = null;
+            Assert.Throws<ArgumentException>(() => clearOptions.ParseClearOptions());
+        }
+
+        [Test]
+        public void Populate_WithRegularAndComplexClass_Works()
+        {
+            // Let's pretend these are the values our properties are currently bound to from our View
+            FromEmail.Value = "LOL_I_AM_NOT_AN_EMAIL!"; // bad
+            ToName.Value = "X"; // bad
+            MessageHtml.Value = "NOPE"; // bad
+            Rating.Value = 5; // good
+
+            var testClassInstance = ValidatableProps.Populate<TestClass>();
+
+            Assert.AreEqual("LOL_I_AM_NOT_AN_EMAIL!", testClassInstance.FromEmail);
+            Assert.AreEqual("X", testClassInstance.ToName);
+            Assert.AreEqual("NOPE", testClassInstance.MessageHtml);
+            Assert.AreEqual(5, testClassInstance.Rating);
+
+            var complexClassValidatable1 = new Validatable<TestClass>(nameof(TestComplexClass.TestClassInstance));
+            complexClassValidatable1.Value = testClassInstance;
+
+            var complexClassValidatable2 = new Validatable<string>(nameof(TestComplexClass.MyName));
+            complexClassValidatable2.Value = "Test Class!";
+
+            var complexValidatables = new Validatables(complexClassValidatable1, complexClassValidatable2);
+            var testComplexClassInstance = complexValidatables.Populate<TestComplexClass>();
+
+            Assert.AreEqual("Test Class!", testComplexClassInstance.MyName);
+            Assert.AreEqual(testClassInstance, testComplexClassInstance.TestClassInstance);
         }
     }
 }

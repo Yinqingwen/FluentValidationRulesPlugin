@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.FluentValidationRules", "Plugin.FluentValidationRules.csproj", "{52350DB9-CF17-43B9-B4AE-A54E2D347F19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.FluentValidationRules.Tests", "..\Plugin.FluentValidationRules.Tests\Plugin.FluentValidationRules.Tests.csproj", "{066C1889-20C3-42BA-8B34-CD6D2C7911E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.FluentValidationRules.Tests", "..\Plugin.FluentValidationRules.Tests\Plugin.FluentValidationRules.Tests.csproj", "{066C1889-20C3-42BA-8B34-CD6D2C7911E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

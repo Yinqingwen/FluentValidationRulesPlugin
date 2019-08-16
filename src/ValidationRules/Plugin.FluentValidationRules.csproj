@@ -7,17 +7,18 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
     <Copyright>Copyright 2019</Copyright>
-    <Version>1.0.0.0</Version>
+    <Version>1.0.5.0</Version>
     
     <!-- Package -->
     <PackageId>Plugin.FluentValidationRules</PackageId>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/mzhukovs/FluentValidationRulesPlugin</PackageProjectUrl>
-    <PackageIconUrl>https://github.com/mzhukovs/FluentValidationRulesPlugin/tree/master/img/icon.png?raw=true</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageIconUrl>https://github.com/mzhukovs/FluentValidationRulesPlugin/blob/master/img/icon.png?raw=true</PackageIconUrl>
     <PackageTags>fluentvalidation, validate, valid, validation, rules, mvvm, xam, xamarin, plugin, forms, xamarin.forms, ios, uwp, android, wpf, windows, .net, core</PackageTags>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Title>Validation Rules Plugin for Xamarin and Windows</Title>
-    <Description>Add Validatable Objects that leverage FluentValidation to your ViewModels for easy binding and validation in a .NET MVVM app!</Description>
+    <Description>Add Validatable objects that leverage FluentValidation to your ViewModels for easy binding and validation in a .NET MVVM app!</Description>
     <Summary>Create and validate properties rules for all your Xamarin and Windows Apps.</Summary>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>default</LangVersion>
@@ -29,21 +30,30 @@
 
     <!-- Author: Luis Matos luismts.com -->
     <Authors>mzhukovs</Authors>
-    <Company>Mark Zhukovsky</Company>
+    <Company></Company>
 
     <!-- Assembly -->
     <RootNamespace>Plugin.FluentValidationRules</RootNamespace>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyVersion>1.0.5.0</AssemblyVersion>
     <AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
     <SignAssembly>false</SignAssembly>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <FileVersion>1.0.5.0</FileVersion>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
     
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Repos\ValidationRulesPlugin.Fluent\src\ValidationRules\Plugin.FluentValidationRules.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\Repos\ValidationRulesPlugin.Fluent\src\ValidationRules\Plugin.FluentValidationRules.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Compile Remove="Extensions\ExtendedBindableObject.cs" />
     <Compile Remove="ValidatableObject.Forms.cs" />
   </ItemGroup>
 
@@ -53,6 +63,13 @@
 
   <ItemGroup>
     <None Include="..\..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\img\icon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

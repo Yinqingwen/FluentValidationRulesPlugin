@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Plugin.FluentValidationRules.Extensions;
-using Plugin.FluentValidationRules.Interfaces;
 
 namespace Plugin.FluentValidationRules
 {
@@ -13,19 +12,19 @@ namespace Plugin.FluentValidationRules
         /// <summary>
         /// Initializes a new instance of the <see cref="Validatables"/> class.
         /// </summary>
-        /// <param name="objects">List of <see cref="Validatable{T}"/> objects to be validated</param>
-        public Validatables(params object[] objects)
+        /// <param name="validatables">List of <see cref="Validatable{T}"/> objects to be validated</param>
+        public Validatables(params IValidity[] validatables)
         {
-            _objects = objects;
+            _objects = validatables;
             _errors = new List<string>();
             _firstError = string.Empty;
         }
 
-        private object[] _objects;
+        private IValidity[] _objects;
         /// <summary>
-        /// The array of Validatable objects that comprise the group.
+        /// The array of <see cref="Validatable{T}"/> objects that comprise the group.
         /// </summary>
-        public object[] Objects
+        public IValidity[] Objects
         {
             get => _objects;
             set => SetProperty(ref _objects, value);
@@ -33,7 +32,7 @@ namespace Plugin.FluentValidationRules
 
         private bool _areValid;
         /// <summary>
-        /// The value indicating whether the validation succeeded across all Validatable objects in the group.
+        /// The value indicating whether the validation succeeded across all <see cref="Validatable{T}"/> objects in the group.
         /// </summary>
         public bool AreValid
         {
@@ -43,7 +42,7 @@ namespace Plugin.FluentValidationRules
 
         private List<string> _errors;
         /// <summary>
-        /// List of errors across all Validatable objects in the group.
+        /// List of errors across all <see cref="Validatable{T}"/> objects in the group.
         /// </summary>
         public List<string> Errors
         {
@@ -66,25 +65,21 @@ namespace Plugin.FluentValidationRules
         }
 
         /// <summary>
-        /// Clears all Errors across all Validatable objects (by default), or for a specific Validatable object (if matching property name is supplied), and resets IsValid to true.
+        /// Clears all Errors across all <see cref="Validatable{T}"/> objects (by default), or for specific <see cref="Validatable{T}"/> objects (if matching property names are supplied), and resets IsValid to true. Also may be used to clear the Values themselves.
         /// </summary>
-        /// <param name="classPropertyName">Leave blank to Clear all validation results for each object in the group, otherwise, specify the target ClassPropertyName for the Validatable object to Clear.</param>
-        public void Clear(string classPropertyName = "")
+        /// <param name="onlyValidation">Set to true to clear only the validation results; false to also reset the <see cref="Validatable{T}"/> objects' Values to their Type defaults.</param>
+        /// <param name="forClassPropertyNames">Leave blank to Clear for each object in the group, otherwise, specify the target ClassPropertyName(s) for the <see cref="Validatable{T}"/>object(s) to Clear.</param>
+        public void Clear(bool onlyValidation = true, params string[] forClassPropertyNames)
         {
-            var props = new List<IValidity>();
+            var clearAll = forClassPropertyNames == null || !forClassPropertyNames.Any() || forClassPropertyNames.All(string.IsNullOrWhiteSpace);
 
             foreach (var obj in _objects)
             {
-                if (!(obj is IValidity validatableObj))
-                    continue;
-
-                props.Add(validatableObj);
-
-                if (string.IsNullOrEmpty(classPropertyName) || validatableObj.ClassPropertyName == classPropertyName)
-                    validatableObj.Clear();
+                if (clearAll || forClassPropertyNames.Contains(obj.ClassPropertyName))
+                    obj.Clear(onlyValidation);
             }
 
-            if (string.IsNullOrEmpty(classPropertyName))
+            if (clearAll)
             {
                 AreValid = true;
                 Errors.Clear();
@@ -92,8 +87,30 @@ namespace Plugin.FluentValidationRules
             }
             else
             {
-                Errors = props.SelectMany(p => p.Errors).ToList();
+                Errors = _objects.SelectMany(p => p.Errors).ToList();
                 AreValid = !Errors.Any();
+            }
+        }
+
+        /// <summary>
+        /// Takes input as a string of the form {true/false}|{comma separated classPropertyNames} to call the <see cref="Clear(bool, string[])"/> method.
+        /// Both portions and the pipe are optional, but if both portions are supplied then the pipe separator is required.
+        /// The first portion defaults to true if not present, which means only Validation results will be cleared (and not Values).
+        /// The 2nd portion defaults to all properties if not present. Otherwise, can supply one, or many with the use of commas.
+        /// So if no/empty string is passed, then only validation (not underlying Values) will be cleared for all properties.
+        /// Useful for when passing this information from a View in XAML.
+        /// </summary>
+        /// <param name="clearOptions">The options string to parse to call the main <see cref="Clear(bool, string[])"/> method on the <see cref="Validatable{T}"/> object(s).</param>
+        public void Clear(string clearOptions)
+        {
+            if (string.IsNullOrWhiteSpace(clearOptions))
+            {
+                Clear();
+            }
+            else
+            {
+                var (clearOnlyValidation, classPropertyNames) = clearOptions.ParseClearOptions();
+                Clear(clearOnlyValidation, classPropertyNames);
             }
         }
     }

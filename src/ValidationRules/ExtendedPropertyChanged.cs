@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Plugin.FluentValidationRules.Extensions
+namespace Plugin.FluentValidationRules
 {
     /// <summary>
     /// Notifies clients that a property value has changed

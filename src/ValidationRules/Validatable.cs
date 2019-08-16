@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Plugin.FluentValidationRules.Extensions;
-using Plugin.FluentValidationRules.Interfaces;
 
 namespace Plugin.FluentValidationRules
 {
     /// <summary>
-    /// Provides a way for an object (which is part of a class) to be validated.
+    /// Provides a way for an object (pertaining to a property on a specific class) to be validated.
     /// </summary>
     /// <typeparam name="T">Type of the data to be validated</typeparam>
     public class Validatable<T> : ExtendedPropertyChanged, IValidity, IDisposable
@@ -32,7 +30,7 @@ namespace Plugin.FluentValidationRules
 
         private List<string> _errors;
         /// <summary>
-        /// List of errors across for the Validatable object.
+        /// List of errors across for the <see cref="Validatable{T}"/> object.
         /// </summary>
         public List<string> Errors
         {
@@ -81,11 +79,15 @@ namespace Plugin.FluentValidationRules
         /// <summary>
         /// Clear the validation Errors and reset IsValid status to true.
         /// </summary>
-        public void Clear()
+        /// <param name="onlyValidation">Set to true to clear only the validation result; false to also reset the Value to its Type's default.</param>
+        public void Clear(bool onlyValidation = true)
         {
             IsValid = true;
             Errors.Clear();
             FirstError = string.Empty;
+
+            if (!onlyValidation)
+                Value = typeof(T) == typeof(string) ? (T)(object)string.Empty : default;
         }
 
         private void ReleaseManagedResources()
@@ -102,7 +104,10 @@ namespace Plugin.FluentValidationRules
 
         // Track whether Dispose has been called. 
         private bool disposed = false;
-
+        
+        /// <summary>
+        /// Clean up.
+        /// </summary>
         public void Dispose()
         {
             // If this function is being called the user wants to release the
@@ -114,6 +119,10 @@ namespace Plugin.FluentValidationRules
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Clean up.
+        /// </summary>
+        /// <param name="disposing">True if disposing.</param>
         protected virtual void Dispose(bool disposing)
         {
             // Check to see if Dispose has already been called.
@@ -139,6 +148,9 @@ namespace Plugin.FluentValidationRules
 
         #endregion
 
+        /// <summary>
+        /// Destructor.
+        /// </summary>
         ~Validatable()
         {
             // The object went out of scope and finalized is called

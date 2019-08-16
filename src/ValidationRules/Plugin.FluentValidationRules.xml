@@ -1,0 +1,288 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Plugin.FluentValidationRules</name>
+    </assembly>
+    <members>
+        <member name="T:Plugin.FluentValidationRules.ExtendedPropertyChanged">
+            <summary>
+            Notifies clients that a property value has changed
+            </summary>
+        </member>
+        <member name="E:Plugin.FluentValidationRules.ExtendedPropertyChanged.PropertyChanged">
+            <summary>
+            Occurs when a property value changes.
+            </summary>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.ExtendedPropertyChanged.NotifyPropertyChanged(System.String)">
+            <summary>
+            Notifies clients that a property value has changed
+            </summary>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.ExtendedPropertyChanged.SetProperty``1(``0@,``0,System.String)">
+            <summary>
+            Assign a new value
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="storage"></param>
+            <param name="value"></param>
+            <param name="propertyName"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Plugin.FluentValidationRules.FluentValidationExtensions">
+            <summary>
+            Extensions to help work with FluentValidation and <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects.
+            </summary>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.FluentValidationExtensions.ApplyResultsTo(FluentValidation.Results.ValidationResult,Plugin.FluentValidationRules.Validatables)">
+            <summary>
+            Takes a validation result and splits it into individual results for each <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> object.
+            </summary>
+            <param name="valResult">The original Fluent <see cref="T:FluentValidation.Results.ValidationResult"/> from a class instance comprised of the values of the individual <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> object properties.</param>
+            <param name="validatableGroup">The <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> object properties to apply results to.</param>
+            <returns>An <see cref="T:Plugin.FluentValidationRules.OverallValidationResult"/> summarizing the original results (on the entire instance) as well as any rule results that were not captured by the <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects.</returns>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.FluentValidationExtensions.ApplyResultsTo(FluentValidation.Results.ValidationResult,Plugin.FluentValidationRules.IValidity)">
+            <summary>
+            Takes a validation result and applies the rule results relevant to the <see cref="T:Plugin.FluentValidationRules.Validatable`1"/>object.
+            </summary>
+            <param name="valResult">The original Fluent <see cref="T:FluentValidation.Results.ValidationResult"/> from a class instance that contains the value of the individual <see cref="T:Plugin.FluentValidationRules.Validatable`1"/>object property.</param>
+            <param name="validatableObj">The <see cref="T:Plugin.FluentValidationRules.Validatable`1"/>object property to apply results to.</param>
+            <returns>An <see cref="T:Plugin.FluentValidationRules.OverallValidationResult"/> summarizing the original results (on the entire instance) as well as any rule results that were not captured by the <see cref="T:Plugin.FluentValidationRules.Validatable`1"/>object.</returns>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.FluentValidationExtensions.GetRulesFor``1(FluentValidation.AbstractValidator{``0},Plugin.FluentValidationRules.IValidity)">
+            <summary>
+            Returns the ValidationRule objects from an <see cref="T:FluentValidation.AbstractValidator`1"/> that are relevant to the given <see cref="T:Plugin.FluentValidationRules.Validatable`1"/>object.
+            </summary>
+            <typeparam name="T">The Type of the class that the <see cref="T:Plugin.FluentValidationRules.Validatable`1"/>object property pertains to, and therefore is the target Type for the <see cref="T:FluentValidation.AbstractValidator`1"/>.</typeparam>
+            <param name="validator">The Fluent <see cref="T:FluentValidation.AbstractValidator`1"/> instance.</param>
+            <param name="validatableObj">The <see cref="T:Plugin.FluentValidationRules.Validatable`1"/>object for which to retrieve ValidationRules for.</param>
+            <returns>A List of IValidationRule relevant to the <see cref="T:Plugin.FluentValidationRules.Validatable`1"/>object.</returns>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.FluentValidationExtensions.GetRulesFor``1(FluentValidation.AbstractValidator{``0},Plugin.FluentValidationRules.Validatables)">
+            <summary>
+            Returns the ValidationRule objects from an <see cref="T:FluentValidation.AbstractValidator`1"/> that are relevant to the given <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects.
+            </summary>
+            <typeparam name="T">The Type of the class that the <see cref="T:Plugin.FluentValidationRules.Validatable`1"/>object properties pertains to, and therefore is the target Type for the <see cref="T:FluentValidation.AbstractValidator`1"/>.</typeparam>
+            <param name="validator">The Fluent <see cref="T:FluentValidation.AbstractValidator`1"/> instance.</param>
+            <param name="validatableGroup">The <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects for which to retrieve ValidationRules for.</param>
+            <returns>A List of IValidationRule relevant to the <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects.</returns>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.FluentValidationExtensions.Populate``1(Plugin.FluentValidationRules.Validatables)">
+            <summary>
+            Populates a new instance of the type T and populates its matching property values with each <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> object in the group of <see cref="T:Plugin.FluentValidationRules.Validatables"/>.
+            </summary>
+            <typeparam name="T">The type of the class to be instantiated and populated.</typeparam>
+            <param name="validatableGroup">The group of <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects whose Values to use to populate the class instance.</param>
+            <returns>A newly instantiated class of type T with the property values set based on the <see cref="T:Plugin.FluentValidationRules.Validatables"/>.</returns>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.FluentValidationExtensions.ParseClearOptions(System.String)">
+            <summary>
+            Takes input as a string of the form {true/false}|{comma separated classPropertyNames} to call the <see cref="M:Plugin.FluentValidationRules.Validatables.Clear(System.Boolean,System.String[])"/> method.
+            Both portions and the pipe are optional, but if both portions are supplied then the pipe separator is required.
+            The first portion defaults to true if not present, which means only Validation results will be cleared (and not Values).
+            The 2nd portion defaults to all properties if not present. Otherwise, can supply one, or many with the use of commas.
+            So if no/empty string is passed, then only validation (not underlying Values) will be cleared for all properties.
+            Useful for when passing this information from a View in XAML.
+            </summary>
+            <param name="clearOptions">The options string to parse.</param>
+            <returns>A tuple with the bool value for clearOnlyValidation and string[] classPropertyNames (or null).</returns>
+        </member>
+        <member name="T:Plugin.FluentValidationRules.IValidate`1">
+            <summary>
+            Add this to your ViewModel that contains <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects that you must <see cref="M:Plugin.FluentValidationRules.IValidate`1.SetupForValidation"/> and then run and get results via  <see cref="M:Plugin.FluentValidationRules.IValidate`1.Validate(`0)"/>.
+            </summary>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.IValidate`1.SetupForValidation">
+            <summary>
+            Provide some setup routine (to be called from ViewModel's constructor) for validation, e.g. set any <see cref="T:FluentValidation.AbstractValidator`1"/> that will be used,
+            set initial Values for any <see cref="T:Plugin.FluentValidationRules.Validatable`1"/>, and define any <see cref="T:Plugin.FluentValidationRules.Validatables"/> (i.e. groups of <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects).
+            </summary>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.IValidate`1.Validate(`0)">
+            <summary>
+            Provide method to run FluentValidation using a <see cref="T:FluentValidation.AbstractValidator`1"/> and then recommend to <see cref="M:Plugin.FluentValidationRules.FluentValidationExtensions.ApplyResultsTo(FluentValidation.Results.ValidationResult,Plugin.FluentValidationRules.Validatables)"/> the Validatable(s).
+            </summary>
+            <param name="model">The class instance containing the  <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> property Values to validate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.IValidate`1.ClearValidation(System.String)">
+            <summary>
+            Provide some setup routine to Clear the validation Errors (and even the Values if desired) and reset IsValid status to true for either all your <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects or only specific one(s).
+            </summary>
+        </member>
+        <member name="T:Plugin.FluentValidationRules.IValidity">
+            <summary>
+            Interface for <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects.
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.IValidity.ClassPropertyName">
+            <summary>
+            The name of the property on the actual class of type T that the <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> object represents.
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.IValidity.IsValid">
+            <summary>
+            True if validation passed, or has not yet been run, or has been reset.
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.IValidity.Errors">
+            <summary>
+            List of any validation errors as a result from a validation run.
+            </summary>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.IValidity.Clear(System.Boolean)">
+            <summary>
+            Method to clear validation results (remove <see cref="P:Plugin.FluentValidationRules.IValidity.Errors"/> and set <see cref="P:Plugin.FluentValidationRules.IValidity.IsValid"/> to true), and optionally reset the underlying Value itself too.
+            </summary>
+            <param name="onlyValidation">True (default) to reset only the validation results. False to also reset the Value.</param>
+        </member>
+        <member name="T:Plugin.FluentValidationRules.OverallValidationResult">
+            <summary>
+            Meant to be used with the ApplyResultsTo extension to store a summary of the overall results from a FluentValidation run as well as those that were not captured by the <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects that were used with the extension.
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.OverallValidationResult.IsValidOverall">
+            <summary>
+            The value indicating whether the validation succeeded across ALL ValidationRules run by the AbstractValidator.
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.OverallValidationResult.IsValidForNonSplitErrors">
+            <summary>
+            The value indicating whether the validation succeeded across ONLY the ValidationRules run by the AbstractValidator that were NOT captured by the Validatable objects passed in to the ApplyResultsTo extension.
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.OverallValidationResult.AllErrors">
+            <summary>
+            List of errors across ALL ValidationRules run by the AbstractValidator.
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.OverallValidationResult.FirstOfAllErrors">
+            <summary>
+            Only the First of errors across ALL ValidationRules run by the AbstractValidator.
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.OverallValidationResult.NonSplitErrors">
+            <summary>
+            List of errors across ONLY the ValidationRules run by the AbstractValidator that were NOT captured by the Validatable objects passed in to the ApplyResultsTo extension.
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.OverallValidationResult.FirstOfNonSplitErrors">
+            <summary>
+            The First of errors across ONLY the ValidationRules run by the AbstractValidator that were NOT captured by the Validatable objects passed in to the ApplyResultsTo extension.
+            </summary>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.OverallValidationResult.Clear">
+            <summary>
+            Clear all validation Errors and reset IsValid statuses to true.
+            </summary>
+        </member>
+        <member name="T:Plugin.FluentValidationRules.Validatable`1">
+            <summary>
+            Provides a way for an object (pertaining to a property on a specific class) to be validated.
+            </summary>
+            <typeparam name="T">Type of the data to be validated</typeparam>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.Validatable`1.ClassPropertyName">
+            <summary>
+            The name of the property being validated, which must be part of a class and match exactly with the name used there.
+            </summary>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.Validatable`1.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> class.
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.Validatable`1.Errors">
+            <summary>
+            List of errors across for the <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> object.
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.Validatable`1.FirstError">
+            <summary>
+            First or Default error of the main error list. 
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.Validatable`1.Value">
+            <summary>
+            The current value being assigned to the property.
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.Validatable`1.IsValid">
+            <summary>
+            The value indicating whether the validation succeeded.
+            </summary>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.Validatable`1.Clear(System.Boolean)">
+            <summary>
+            Clear the validation Errors and reset IsValid status to true.
+            </summary>
+            <param name="onlyValidation">Set to true to clear only the validation result; false to also reset the Value to its Type's default.</param>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.Validatable`1.Dispose">
+            <summary>
+            Clean up.
+            </summary>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.Validatable`1.Dispose(System.Boolean)">
+            <summary>
+            Clean up.
+            </summary>
+            <param name="disposing">True if disposing.</param>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.Validatable`1.Finalize">
+            <summary>
+            Destructor.
+            </summary>
+        </member>
+        <member name="T:Plugin.FluentValidationRules.Validatables">
+            <summary>
+            Provides a way for a group of <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> to have their valid status and error lists populated.
+            </summary>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.Validatables.#ctor(Plugin.FluentValidationRules.IValidity[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Plugin.FluentValidationRules.Validatables"/> class.
+            </summary>
+            <param name="validatables">List of <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects to be validated</param>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.Validatables.Objects">
+            <summary>
+            The array of <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects that comprise the group.
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.Validatables.AreValid">
+            <summary>
+            The value indicating whether the validation succeeded across all <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects in the group.
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.Validatables.Errors">
+            <summary>
+            List of errors across all <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects in the group.
+            </summary>
+        </member>
+        <member name="P:Plugin.FluentValidationRules.Validatables.FirstError">
+            <summary>
+            First or Default error of the main error list for the group.
+            </summary>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.Validatables.Clear(System.Boolean,System.String[])">
+            <summary>
+            Clears all Errors across all <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects (by default), or for specific <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects (if matching property names are supplied), and resets IsValid to true. Also may be used to clear the Values themselves.
+            </summary>
+            <param name="onlyValidation">Set to true to clear only the validation results; false to also reset the <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects' Values to their Type defaults.</param>
+            <param name="forClassPropertyNames">Leave blank to Clear for each object in the group, otherwise, specify the target ClassPropertyName(s) for the <see cref="T:Plugin.FluentValidationRules.Validatable`1"/>object(s) to Clear.</param>
+        </member>
+        <member name="M:Plugin.FluentValidationRules.Validatables.Clear(System.String)">
+            <summary>
+            Takes input as a string of the form {true/false}|{comma separated classPropertyNames} to call the <see cref="M:Plugin.FluentValidationRules.Validatables.Clear(System.Boolean,System.String[])"/> method.
+            Both portions and the pipe are optional, but if both portions are supplied then the pipe separator is required.
+            The first portion defaults to true if not present, which means only Validation results will be cleared (and not Values).
+            The 2nd portion defaults to all properties if not present. Otherwise, can supply one, or many with the use of commas.
+            So if no/empty string is passed, then only validation (not underlying Values) will be cleared for all properties.
+            Useful for when passing this information from a View in XAML.
+            </summary>
+            <param name="clearOptions">The options string to parse to call the main <see cref="M:Plugin.FluentValidationRules.Validatables.Clear(System.Boolean,System.String[])"/> method on the <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> object(s).</param>
+        </member>
+    </members>
+</doc>
