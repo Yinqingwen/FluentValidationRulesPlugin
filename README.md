@@ -62,7 +62,7 @@ Recommend using [PropertyChanged.Fody](https://github.com/Fody/PropertyChanged):
     public Validatable<string> RecipientName { get; set; } = new Validatable<string>(nameof(Email.RecipientName));
     public Validatable<string> EmailAddress { get; set; } = new Validatable<string>(nameof(Email.RecipientEmailAddress));
 ```
-:bulb: Thanks to nameof(), it is clear to which class and property the Validatables are intended to map to, and they need not have the same name.
+:bulb: Thanks to nameof(), it is clear to which class and property the Validatables are intended to map to, and they need not have the same name, although it is recommended they do. E.g. in this example, the EmailAddress Validatable would be better off named as RecipientEmailAddress.
 
 Otherwise:
 ```csharp
