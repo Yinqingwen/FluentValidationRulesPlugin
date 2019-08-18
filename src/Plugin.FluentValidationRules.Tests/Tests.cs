@@ -361,5 +361,29 @@ namespace Plugin.FluentValidationRules.Tests
             Assert.AreEqual("Test Class!", testComplexClassInstance.MyName);
             Assert.AreEqual(testClassInstance, testComplexClassInstance.TestClassInstance);
         }
+
+        [Test]
+        public void Populate_WithExistingClass_Works()
+        {
+            // Let's pretend these are the values our properties are currently bound to from our View
+            FromEmail.Value = "OLD VALUE"; // bad
+            ToName.Value = "OLD VALUE"; // bad
+            MessageHtml.Value = "OLD VALUE"; // bad
+            Rating.Value = 5; // good
+
+            var testClassInstance = ValidatableProps.Populate<TestClass>();
+
+            var subsetOfValidatableProps = new Validatables(FromEmail, ToName);
+
+            FromEmail.Value = "NEW VALUE";
+            ToName.Value = "NEW VALUE";
+
+            subsetOfValidatableProps.Populate(testClassInstance);
+
+            Assert.AreEqual("NEW VALUE", testClassInstance.FromEmail);
+            Assert.AreEqual("NEW VALUE", testClassInstance.ToName);
+            Assert.AreEqual("OLD VALUE", testClassInstance.MessageHtml);
+            Assert.AreEqual(5, testClassInstance.Rating);
+        }
     }
 }

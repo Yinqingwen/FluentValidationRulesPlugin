@@ -94,6 +94,8 @@ namespace XamFluentValidationExample.ViewModels
         public void ExecuteValidateEmailCommand()
         {
             var email = _emailValidatables.Populate<Email>();
+            // if updating an existing instance instead of creating a new one, just pass it in, e.g. _emailValidatables.Populate(email);
+            // in either case, only the matching properties in the class will be updated
 
             if (Validate(email).IsValidOverall)
             {

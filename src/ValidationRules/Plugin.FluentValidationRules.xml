@@ -68,13 +68,14 @@
             <param name="validatableGroup">The <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects for which to retrieve ValidationRules for.</param>
             <returns>A List of IValidationRule relevant to the <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects.</returns>
         </member>
-        <member name="M:Plugin.FluentValidationRules.FluentValidationExtensions.Populate``1(Plugin.FluentValidationRules.Validatables)">
+        <member name="M:Plugin.FluentValidationRules.FluentValidationExtensions.Populate``1(Plugin.FluentValidationRules.Validatables,``0)">
             <summary>
-            Populates a new instance of the type T and populates its matching property values with each <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> object in the group of <see cref="T:Plugin.FluentValidationRules.Validatables"/>.
+            If no existing instance is passed in, creates a new instance of the type T and populates its matching property values with each <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> object in the group of <see cref="T:Plugin.FluentValidationRules.Validatables"/>.
             </summary>
             <typeparam name="T">The type of the class to be instantiated and populated.</typeparam>
             <param name="validatableGroup">The group of <see cref="T:Plugin.FluentValidationRules.Validatable`1"/> objects whose Values to use to populate the class instance.</param>
-            <returns>A newly instantiated class of type T with the property values set based on the <see cref="T:Plugin.FluentValidationRules.Validatables"/>.</returns>
+            <param name="model">Optionally pass in an existing class instance to update.</param>
+            <returns>Class of type T with the property values set based on the <see cref="T:Plugin.FluentValidationRules.Validatables"/>.</returns>
         </member>
         <member name="M:Plugin.FluentValidationRules.FluentValidationExtensions.ParseClearOptions(System.String)">
             <summary>

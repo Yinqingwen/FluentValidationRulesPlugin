@@ -125,15 +125,16 @@ namespace Plugin.FluentValidationRules
         }
 
         /// <summary>
-        /// Populates a new instance of the type T and populates its matching property values with each <see cref="Validatable{T}"/> object in the group of <see cref="Validatables"/>.
+        /// If no existing instance is passed in, creates a new instance of the type T and populates its matching property values with each <see cref="Validatable{T}"/> object in the group of <see cref="Validatables"/>.
         /// </summary>
         /// <typeparam name="T">The type of the class to be instantiated and populated.</typeparam>
         /// <param name="validatableGroup">The group of <see cref="Validatable{T}"/> objects whose Values to use to populate the class instance.</param>
-        /// <returns>A newly instantiated class of type T with the property values set based on the <see cref="Validatables"/>.</returns>
-        public static T Populate<T>(this Validatables validatableGroup)
+        /// <param name="model">Optionally pass in an existing class instance to update.</param>
+        /// <returns>Class of type T with the property values set based on the <see cref="Validatables"/>.</returns>
+        public static T Populate<T>(this Validatables validatableGroup, T model = null)
             where T : class, new()
         {
-            var instance = new T();
+            var instance = model ?? new T();
             var instanceType = instance.GetType();
             var validatableType = typeof(Validatable<>);
 
